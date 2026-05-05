@@ -3,57 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 10px 5px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-    </style>
 </head>
 <body>
-<div class="container">
-    <h1>Welcome to Spring 6</h1>
-    <p th:text="${message}"></p>
-
-    <h2>Navigate to Views:</h2>
-
-    <!-- Button/Link to test-xml.jsp -->
-    <form action="/PortailEtudiants_war_exploded/test-xml" method="GET">
-        <button type="submit">Go to Test XML View</button>
-    </form>
-
-    <!-- Button/Link to welcome.jsp -->
-    <form action="/PortailEtudiants_war_exploded/welcome-jsp" method="GET">
-        <button type="submit">Go to Welcome JSP View</button>
-    </form>
-
-    <!-- Or use direct links instead of forms -->
-    <h3>Or use links:</h3>
-    <ul>
-        <li><a href="/PortailEtudiants_war_exploded/test-xml">Test XML</a></li>
-        <li><a href="/PortailEtudiants_war_exploded/welcome-jsp">Welcome JSP</a></li>
-    </ul>
-</div>
+<h1>Welcome to Spring 6!</h1>
+<p>Your Thymeleaf template is working correctly.</p>
 </body>
 </html>
