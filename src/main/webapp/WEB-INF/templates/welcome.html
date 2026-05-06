@@ -299,10 +299,10 @@
 <body>
     <!-- NAVIGATION BAR -->
     <nav class="navbar">
-        <a href="/" class="navbar-logo">📚 Student Portal</a>
+        <a th:href="@{/hello}" class="navbar-logo">📚 Student Portal</a>
         
         <ul class="navbar-menu">
-            <li><a href="/" th:text="#{nav.home}">Home</a></li>
+            <li><a th:href="@{/hello}" th:text="#{nav.home}">Home</a></li>
             <li><a href="#" th:text="#{nav.events}">Events</a></li>
             <li><a href="#" th:text="#{nav.login}">Login</a></li>
         </ul>
