@@ -1,11 +1,373 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{welcome.title}">Welcome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== NAVIGATION BAR ===== */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .navbar-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .navbar-menu a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-menu a:hover {
+            color: #667eea;
+        }
+
+        /* ===== LANGUAGE SWITCHER ===== */
+        .language-switcher {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .language-switcher a {
+            display: inline-block;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            text-decoration: none;
+            padding: 0.25rem;
+        }
+
+        .language-switcher a:hover {
+            transform: scale(1.2);
+        }
+
+        .language-label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .content {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content h1 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .content p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .feature {
+            background: #f8f9ff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .feature p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        /* ===== BUTTONS ===== */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: rgba(0, 0, 0, 0.1);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: auto;
+        }
+
+        .footer p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: opacity 0.3s;
+        }
+
+        .footer a:hover {
+            opacity: 0.8;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .navbar-menu {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+                width: 100%;
+            }
+
+            .content {
+                padding: 2rem;
+            }
+
+            .content h1 {
+                font-size: 1.5rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .language-switcher {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+
+            .navbar {
+                padding: 1rem;
+            }
+
+            .content {
+                padding: 1.5rem;
+                border-radius: 10px;
+            }
+
+            .content h1 {
+                font-size: 1.3rem;
+            }
+
+            .content p {
+                font-size: 1rem;
+            }
+
+            .feature {
+                padding: 1rem;
+            }
+
+            .feature h3 {
+                font-size: 0.9rem;
+            }
+
+            .feature p {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to Spring 6!</h1>
-<p>Your Thymeleaf template is working correctly.</p>
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <a href="/" class="navbar-logo">📚 Student Portal</a>
+        
+        <ul class="navbar-menu">
+            <li><a href="/" th:text="#{nav.home}">Home</a></li>
+            <li><a href="#" th:text="#{nav.events}">Events</a></li>
+            <li><a href="#" th:text="#{nav.login}">Login</a></li>
+        </ul>
+
+        <!-- LANGUAGE SWITCHER WITH FLAGS -->
+        <div class="language-switcher">
+            <!-- French -->
+            <a href="?lang=fr" title="Français">🇫🇷</a>
+            <!-- English -->
+            <a href="?lang=en" title="English">🇬🇧</a>
+            <!-- Arabic -->
+            <a href="?lang=ar" title="العربية">🇸🇦</a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="content">
+            <!-- Welcome Title -->
+            <h1 th:text="#{welcome.title}">Welcome to Student Portal</h1>
+
+            <!-- Welcome Message -->
+            <p th:text="#{welcome.message}">Discover and participate in campus events</p>
+
+            <!-- Features Section (Demonstrating i18n) -->
+            <div class="features">
+                <div class="feature">
+                    <h3>🔍 <span th:text="#{nav.search}">Search</span></h3>
+                    <p th:text="#{event.search}">Search for Event</p>
+                </div>
+                <div class="feature">
+                    <h3>📅 <span th:text="#{nav.events}">Events</span></h3>
+                    <p th:text="#{event.noresults}">No events available</p>
+                </div>
+                <div class="feature">
+                    <h3>👤 <span th:text="#{nav.profile}">Profile</span></h3>
+                    <p th:text="#{nav.login}">Sign In</p>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button class="btn btn-primary" th:text="#{nav.register}">Register</button>
+                <button class="btn btn-secondary" th:text="#{nav.login}">Sign In</button>
+            </div>
+
+            <!-- How i18n Works (Documentation) -->
+            <hr style="margin: 2rem 0; border: none; border-top: 2px solid #eee;">
+            <p style="font-size: 0.9rem; color: #999; margin-top: 1rem;">
+                <strong style="color: #667eea;">💡 How i18n Works:</strong><br>
+                Click 🇫🇷 🇬🇧 🇸🇦 to change language instantly!<br>
+                Language is stored in your session and persists across pages.<br>
+                All text uses Thymeleaf syntax: <code>th:text="#{key}"</code>
+            </p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p th:text="#{footer.copyright}">© 2026 Student Portal. All rights reserved.</p>
+        <div>
+            <a href="#" th:text="#{footer.about}">About</a>
+            <a href="#" th:text="#{footer.contact}">Contact</a>
+            <a href="#" th:text="#{footer.privacy}">Privacy Policy</a>
+        </div>
+    </footer>
 </body>
 </html>
