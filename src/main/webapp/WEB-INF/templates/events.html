@@ -32,12 +32,24 @@
             <button type="submit" class="btn btn-primary" th:text="#{nav.search}">Search</button>
         </form>
 
-        <!-- LISTE DES EVENEMENTS -->
+        <!-- LISTE DES EVENEMENTS (Ton travail d'Architecte) -->
         <div class="event-grid">
             <div class="event-card" th:each="event : ${events}">
-                <h3 th:text="${event.titre}">Event Title</h3>
-                <p th:text="${event.description}">Description</p>
-                <button class="btn btn-secondary" style="margin-top:10px" th:text="#{event.join}">Join</button>
+                <h3 th:text="${event.titre}">Titre de l'événement</h3>
+
+                <div class="event-details">
+                    📍 <span th:text="${event.lieu}">Lieu</span> |
+                    📅 <span th:text="${event.date}">Date</span>
+                </div>
+
+                <p th:text="${event.description}">Description détaillée de l'événement.</p>
+
+                <!-- BOUTON PARTICIPER CORRIGÉ -->
+                <a th:href="@{/events/participate/{id}(id=${event.id})}"
+                   class="btn btn-secondary btn-link"
+                   th:text="#{event.join}">
+                    Participer
+                </a>
             </div>
         </div>
 

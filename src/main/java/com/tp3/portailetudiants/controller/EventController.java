@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.tp3.portailetudiants.model.Event; // Pour que le contrôleur connaisse ta classe Event
+import org.springframework.web.bind.annotation.PathVariable; // Pour utiliser @PathVariable
 
 @Controller
 public class EventController {
@@ -27,5 +29,16 @@ public class EventController {
             model.addAttribute("events", eventRepository.findAll());
         }
         return "events"; // Thymeleaf avec support multilingue
+    }
+    @GetMapping("/events/participate/{id}")
+    public String participate(@PathVariable("id") Long id, Model model) {
+        // On cherche l'événement en base pour récupérer son titre
+        Event event = eventRepository.findById(id).orElse(null);
+
+        if (event != null) {
+            model.addAttribute("message", "Votre participation à l'événement '" + event.getTitre() + "' a été prise en compte !");
+        }
+
+        return "participation-confirm"; // On va créer cette petite page
     }
 }
