@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{nav.register}">Register</title>
+    <!-- On réutilise le style de Balkis ici -->
+    <style th:replace="~{welcome :: style}"></style>
+    <style>
+        /* Ajout de styles pour les formulaires */
+        input { width: 100%; padding: 0.8rem; margin-top: 0.5rem; border: 1px solid #ddd; border-radius: 5px; }
+        .error { color: #e74c3c; font-size: 0.8rem; margin-top: 0.2rem; display: block; text-align: left; }
+        .form-group { margin-bottom: 1.5rem; text-align: left; }
+    </style>
+</head>
+<body th:dir="${#locale.language == 'ar' ? 'rtl' : 'ltr'}">
+<nav class="navbar" th:insert="~{welcome :: .navbar}"></nav>
+
+<div class="container">
+    <div class="content">
+        <h1 th:text="#{nav.register}">Register</h1>
+
+        <form th:action="@{/register}" th:object="${user}" method="post">
+            <div class="form-group">
+                <label th:text="#{register.name}">Nom</label>
+                <input type="text" th:field="*{nom}" />
+                <span class="error" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{register.email}">Email</label>
+                <input type="email" th:field="*{email}" />
+                <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{register.password}">Password</label>
+                <input type="password" th:field="*{password}" />
+                <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary" th:text="#{nav.register}">Register</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

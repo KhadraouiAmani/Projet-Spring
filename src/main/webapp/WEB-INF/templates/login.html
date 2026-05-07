@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{nav.login}">Login</title>
+    <style th:replace="~{welcome :: style}"></style>
+    <style>
+        input { width: 100%; padding: 0.8rem; margin-top: 0.5rem; border: 1px solid #ddd; border-radius: 5px; }
+        .alert-error { background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 5px; margin-bottom: 1rem; }
+    </style>
+</head>
+<body th:dir="${#locale.language == 'ar' ? 'rtl' : 'ltr'}">
+<nav class="navbar" th:insert="~{welcome :: .navbar}"></nav>
+
+<div class="container">
+    <div class="content">
+        <h1 th:text="#{nav.login}">Sign In</h1>
+
+        <div class="alert-error" th:if="${error}" th:text="${error}"></div>
+
+        <form th:action="@{/login}" method="post">
+            <div style="text-align: left; margin-bottom: 1rem;">
+                <label th:text="#{register.email}">Email</label>
+                <input type="email" name="email" required />
+            </div>
+            <div style="text-align: left; margin-bottom: 1.5rem;">
+                <label th:text="#{register.password}">Password</label>
+                <input type="password" name="password" required />
+            </div>
+            <button type="submit" class="btn btn-primary" th:text="#{nav.login}">Login</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
