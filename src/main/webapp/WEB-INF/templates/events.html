@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{nav.events}">Events</title>
+    <style th:replace="~{welcome :: style}"></style>
+    <style>
+        .search-box { display: flex; gap: 10px; margin-bottom: 2rem; }
+        .event-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .event-card { border: 1px solid #eee; padding: 15px; border-radius: 10px; text-align: left; }
+        .event-card h3 { color: #764ba2; margin-bottom: 5px; }
+        .user-info { background: #f0f0f0; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; }
+    </style>
+</head>
+<body th:dir="${#locale.language == 'ar' ? 'rtl' : 'ltr'}">
+<nav class="navbar">
+    <a href="#" class="navbar-logo">📚 Portal</a>
+    <div class="user-info">
+        👤 <span th:text="${session.userSession.nom}">User</span>
+        | <a th:href="@{/logout}" style="color:red; text-decoration:none;">Logout</a>
+    </div>
+    <div class="language-switcher" th:insert="~{welcome :: .language-switcher}"></div>
+</nav>
+
+<div class="container" style="align-items: flex-start; padding-top: 5rem;">
+    <div class="content" style="max-width: 900px;">
+        <h1 th:text="#{nav.events}">Search Events</h1>
+
+        <!-- FORMULAIRE DE RECHERCHE (Fonctionnalité 3) -->
+        <form th:action="@{/events}" method="get" class="search-box">
+            <input type="text" name="keyword" th:placeholder="#{search.placeholder}" style="flex:1" />
+            <button type="submit" class="btn btn-primary" th:text="#{nav.search}">Search</button>
+        </form>
+
+        <!-- LISTE DES EVENEMENTS -->
+        <div class="event-grid">
+            <div class="event-card" th:each="event : ${events}">
+                <h3 th:text="${event.titre}">Event Title</h3>
+                <p th:text="${event.description}">Description</p>
+                <button class="btn btn-secondary" style="margin-top:10px" th:text="#{event.join}">Join</button>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(events)}" style="margin-top:2rem">
+            <p th:text="#{event.noresults}">No events found</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
