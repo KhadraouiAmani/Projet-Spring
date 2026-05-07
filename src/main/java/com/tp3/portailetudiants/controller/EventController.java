@@ -15,14 +15,14 @@ public class EventController {
     private EventRepository eventRepository;
 
     @GetMapping("/events")
-    public String searchEvents(@RequestParam(required = false) String keyword, HttpSession session, Model model) {
+    public String searchEvents(@RequestParam(name = "keyword", required = false) String keyword, HttpSession session, Model model) {
         // SECURITÉ : Vérifier si l'étudiant est connecté
         if (session.getAttribute("userSession") == null) {
             return "redirect:/login";
         }
 
         if (keyword != null && !keyword.isEmpty()) {
-            model.addAttribute("events", eventRepository.findByTitreContaining(keyword));
+            model.addAttribute("events", eventRepository.findByTitreContainingIgnoreCase(keyword));
         } else {
             model.addAttribute("events", eventRepository.findAll());
         }
