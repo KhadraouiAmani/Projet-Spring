@@ -23,7 +23,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
+    public String login(@RequestParam("email") String email,
+                        @RequestParam("password") String password, HttpSession session, Model model) {
         User user = authService.login(email, password);
         if (user != null) {
             session.setAttribute("userSession", user); // GESTION DE SESSION

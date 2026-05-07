@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.net.URI;
 import java.time.Instant;
 
-@ControllerAdvice
+//@ControllerAdvice
 public class GlobalExceptionHandler {
 
     // --- Gestion de l'erreur spécifique (Exemple 7 - Innovation Spring 6) ---
