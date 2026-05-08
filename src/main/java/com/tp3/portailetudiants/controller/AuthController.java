@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AuthController {
@@ -16,43 +19,45 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    // EXEMPLE 1 : Utilisation de JSP pour le Login
     @GetMapping("/login")
-    public String showLogin() {
-        return "login"; // Ouvre WEB-INF/jsp/login.jsp
+    public String showLogin(Model model) {
+        model.addAttribute("loginEmail", "");
+        return "login";
     }
 
     @PostMapping("/login")
     public String login(@RequestParam("email") String email,
-                        @RequestParam("password") String password, HttpSession session, Model model) {
+                        @RequestParam("password") String password,
+                        HttpSession session,
+                        Model model) {
         User user = authService.login(email, password);
         if (user != null) {
-            session.setAttribute("userSession", user); // GESTION DE SESSION
+            session.setAttribute("userSession", user);
             return "redirect:/events";
         }
-        model.addAttribute("error", "Email ou mot de passe incorrect");
+        model.addAttribute("loginEmail", email);
+        model.addAttribute("loginError", true);
         return "login";
     }
 
-    // EXEMPLE 2 & 5 : Thymeleaf + Validation
     @GetMapping("/register")
     public String showRegister(Model model) {
         model.addAttribute("user", new User());
-        return "register"; // Ouvre WEB-INF/templates/register.html
+        return "register";
     }
 
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("user") User user, BindingResult result) {
         if (result.hasErrors()) {
-            return "register"; // Retourne au formulaire si erreurs (Validation)
+            return "register";
         }
         authService.register(user);
-        return "redirect:/login";
+        return "redirect:/login?registered";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // Détruit la session
+        session.invalidate();
         return "redirect:/login";
     }
 }

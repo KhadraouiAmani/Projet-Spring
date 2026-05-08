@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="#{welcome.title}">Welcome</title>
-    <style>
+    <style th:fragment="base-style">
         * {
             margin: 0;
             padding: 0;
@@ -17,9 +17,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            color: #333;
         }
 
-        /* ===== NAVIGATION BAR ===== */
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             padding: 1rem 2rem;
@@ -33,14 +33,14 @@
 
         .navbar-logo {
             font-size: 1.5rem;
-            font-weight: bold;
+            font-weight: 700;
             color: #667eea;
             text-decoration: none;
         }
 
         .navbar-menu {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             align-items: center;
             list-style: none;
         }
@@ -56,7 +56,6 @@
             color: #667eea;
         }
 
-        /* ===== LANGUAGE SWITCHER ===== */
         .language-switcher {
             display: flex;
             gap: 0.5rem;
@@ -64,25 +63,23 @@
         }
 
         .language-switcher a {
-            display: inline-block;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 999px;
+            font-size: 1.25rem;
             text-decoration: none;
-            padding: 0.25rem;
+            background: rgba(102, 126, 234, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .language-switcher a:hover {
-            transform: scale(1.2);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.18);
         }
 
-        .language-label {
-            font-size: 0.75rem;
-            color: #666;
-            margin-top: 0.25rem;
-        }
-
-        /* ===== MAIN CONTENT ===== */
         .container {
             flex: 1;
             display: flex;
@@ -93,11 +90,11 @@
 
         .content {
             background: white;
-            border-radius: 15px;
+            border-radius: 18px;
             padding: 3rem;
             max-width: 600px;
             width: 100%;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
             text-align: center;
             animation: fadeIn 0.5s ease-in;
         }
@@ -123,12 +120,12 @@
             color: #666;
             line-height: 1.6;
             margin-bottom: 1rem;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         .features {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 1rem;
             margin-top: 2rem;
             text-align: left;
@@ -137,7 +134,7 @@
         .feature {
             background: #f8f9ff;
             padding: 1.5rem;
-            border-radius: 10px;
+            border-radius: 12px;
             border-left: 4px solid #667eea;
         }
 
@@ -153,7 +150,6 @@
             margin: 0;
         }
 
-        /* ===== BUTTONS ===== */
         .button-group {
             display: flex;
             gap: 1rem;
@@ -163,13 +159,16 @@
         }
 
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.85rem 1.5rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 999px;
             font-size: 1rem;
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
             transition: all 0.3s ease;
             font-weight: 600;
         }
@@ -181,7 +180,7 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.35);
         }
 
         .btn-secondary {
@@ -195,12 +194,11 @@
             color: white;
         }
 
-        /* ===== FOOTER ===== */
         .footer {
             background: rgba(0, 0, 0, 0.1);
             color: white;
             text-align: center;
-            padding: 2rem;
+            padding: 1.5rem;
             margin-top: auto;
         }
 
@@ -220,7 +218,6 @@
             opacity: 0.8;
         }
 
-        /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
@@ -244,7 +241,6 @@
 
             .features {
                 grid-template-columns: 1fr;
-                gap: 1rem;
             }
 
             .button-group {
@@ -261,17 +257,17 @@
         }
 
         @media (max-width: 480px) {
-            body {
-                padding: 0;
+            .navbar {
+                padding: 1rem;
             }
 
-            .navbar {
+            .container {
                 padding: 1rem;
             }
 
             .content {
                 padding: 1.5rem;
-                border-radius: 10px;
+                border-radius: 12px;
             }
 
             .content h1 {
@@ -285,80 +281,61 @@
             .feature {
                 padding: 1rem;
             }
-
-            .feature h3 {
-                font-size: 0.9rem;
-            }
-
-            .feature p {
-                font-size: 0.85rem;
-            }
         }
     </style>
 </head>
-<body>
-    <!-- NAVIGATION BAR -->
-    <nav class="navbar">
-        <a th:href="@{/hello}" class="navbar-logo">📚 Student Portal</a>
-        
-        <ul class="navbar-menu">
-            <li><a th:href="@{/hello}" th:text="#{nav.home}">Home</a></li>
-            <li><a th:href="@{/events}" th:text="#{nav.events}">Events</a></li>
-            <li><a href="#" th:text="#{nav.login}">Login</a></li>
-        </ul>
+<body th:dir="${#locale.language == 'ar' ? 'rtl' : 'ltr'}">
+<nav class="navbar" th:fragment="navbar(currentPath)">
+    <a th:href="@{/hello(lang=${#locale.language})}" class="navbar-logo">📚 <span th:text="#{nav.brand}">Student Portal</span></a>
 
-        <!-- LANGUAGE SWITCHER WITH FLAGS -->
-        <div class="language-switcher">
-            <!-- French -->
-            <a href="?lang=fr" title="Français">🇫🇷</a>
-            <!-- English -->
-            <a href="?lang=en" title="English">🇬🇧</a>
-            <!-- Arabic -->
-            <a href="?lang=ar" title="العربية">🇸🇦</a>
-        </div>
-    </nav>
+    <ul class="navbar-menu">
+        <li><a th:href="@{/hello(lang=${#locale.language})}" th:text="#{nav.home}">Home</a></li>
+        <li><a th:href="@{/events(lang=${#locale.language})}" th:text="#{nav.events}">Events</a></li>
+        <li><a th:href="@{/login(lang=${#locale.language})}" th:text="#{nav.login}">Login</a></li>
+        <li><a th:href="@{/register(lang=${#locale.language})}" th:text="#{nav.register}">Register</a></li>
+    </ul>
 
-    <!-- MAIN CONTENT -->
-    <div class="container">
-        <div class="content">
-            <!-- Welcome Title -->
-            <h1 th:text="#{welcome.title}">Welcome to Student Portal</h1>
+    <div class="language-switcher" th:attr="aria-label=#{language.change}">
+        <a th:href="@{__${currentPath}__(lang='fr')}" th:title="#{language.french}">🇫🇷</a>
+        <a th:href="@{__${currentPath}__(lang='en')}" th:title="#{language.english}">🇬🇧</a>
+        <a th:href="@{__${currentPath}__(lang='ar')}" th:title="#{language.arabic}">🇸🇦</a>
+    </div>
+</nav>
 
-            <!-- Welcome Message -->
-            <p th:text="#{welcome.message}">Discover and participate in campus events</p>
+<div class="container">
+    <div class="content">
+        <h1 th:text="#{welcome.title}">Welcome to Student Portal</h1>
+        <p th:text="#{welcome.message}">Discover and participate in campus events</p>
 
-            <!-- Features Section (Demonstrating i18n) -->
-            <div class="features">
-                <div class="feature">
-                    <h3>🔍 <span th:text="#{nav.search}">Search</span></h3>
-                    <p th:text="#{event.search}">Search for Event</p>
-                </div>
-                <div class="feature">
-                    <h3>📅 <span th:text="#{nav.events}">Events</span></h3>
-                    <p th:text="#{event.noresults}">No events available</p>
-                </div>
-                <div class="feature">
-                    <h3>👤 <span th:text="#{nav.profile}">Profile</span></h3>
-                    <p th:text="#{nav.login}">Sign In</p>
-                </div>
+        <div class="features">
+            <div class="feature">
+                <h3>🔍 <span th:text="#{nav.search}">Search</span></h3>
+                <p th:text="#{event.search}">Search for Event</p>
             </div>
+            <div class="feature">
+                <h3>📅 <span th:text="#{nav.events}">Events</span></h3>
+                <p th:text="#{event.noresults}">No events available</p>
+            </div>
+            <div class="feature">
+                <h3>👤 <span th:text="#{nav.profile}">Profile</span></h3>
+                <p th:text="#{nav.login}">Sign In</p>
+            </div>
+        </div>
 
-            <!-- Bouton Inscription (Ton travail) -->
-            <a th:href="@{/register}" class="btn btn-primary" th:text="#{nav.register}">Inscription</a>
-
-            <!-- Bouton Connexion (Travail d'Islem) -->
-            <a th:href="@{/login}" class="btn btn-secondary" th:text="#{nav.login}">Connexion</a>
+        <div class="button-group">
+            <a th:href="@{/register(lang=${#locale.language})}" class="btn btn-primary" th:text="#{nav.register}">Register</a>
+            <a th:href="@{/login(lang=${#locale.language})}" class="btn btn-secondary" th:text="#{nav.login}">Login</a>
         </div>
     </div>
+</div>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-        <p th:text="#{footer.copyright}">© 2026 Student Portal. All rights reserved.</p>
-        <div>
-            <a href="#" th:text="#{footer.about}">About</a>
-            <a href="#" th:text="#{footer.contact}">Contact</a>
-            <a href="#" th:text="#{footer.privacy}">Privacy Policy</a>
-        </div>
-    </footer>
+<footer class="footer" th:fragment="footer">
+    <p th:text="#{footer.copyright}">© 2026 Student Portal. All rights reserved.</p>
+    <div>
+        <a href="#" th:text="#{footer.about}">About</a>
+        <a href="#" th:text="#{footer.contact}">Contact</a>
+        <a href="#" th:text="#{footer.privacy}">Privacy Policy</a>
+    </div>
+</footer>
 </body>
 </html>

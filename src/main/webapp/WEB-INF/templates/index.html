@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{nav.events}">Events</title>
+    <style th:replace="~{welcome :: base-style}"></style>
+    <style>
+        .events-page {
+            align-items: flex-start;
+        }
+
+        .events-shell {
+            width: min(1120px, 100%);
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .hero,
+        .search-panel,
+        .events-grid {
+            width: 100%;
+        }
+
+        .hero,
+        .search-panel {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
+        }
+
+        .hero h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            color: #5f6475;
+            margin: 0;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .search-field label {
+            display: block;
+            margin-bottom: 0.45rem;
+            font-weight: 600;
+            color: #4a4a4a;
+        }
+
+        .search-input,
+        .search-select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 1px solid #d9def7;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .event-card {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 12px 24px rgba(49, 63, 142, 0.12);
+            display: grid;
+            gap: 1rem;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 28px rgba(49, 63, 142, 0.18);
+        }
+
+        .event-card-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .event-type-badge {
+            background: rgba(102, 126, 234, 0.12);
+            color: #4f46e5;
+            border-radius: 999px;
+            padding: 0.35rem 0.8rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .event-title {
+            color: #2d2f38;
+            margin-bottom: 0.35rem;
+        }
+
+        .event-description {
+            color: #666;
+            margin: 0;
+            line-height: 1.55;
+        }
+
+        .event-meta {
+            display: grid;
+            gap: 0.7rem;
+        }
+
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            border-bottom: 1px solid #eef1ff;
+            padding-bottom: 0.55rem;
+            color: #555;
+        }
+
+        .meta-label {
+            font-weight: 700;
+            color: #667085;
+        }
+
+        .empty-state {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 18px;
+            padding: 2rem;
+            text-align: center;
+            color: #5f6475;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
+        }
+
+        .action-form {
+            display: flex;
+        }
+
+        .action-form .btn {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body th:dir="${#locale.language == 'ar' ? 'rtl' : 'ltr'}">
+<nav th:replace="~{welcome :: navbar('/events')}"></nav>
+
+<div class="container events-page">
+    <div class="events-shell">
+        <section class="hero">
+            <h1 th:text="#{nav.events}">Events</h1>
+            <p th:text="#{event.search}">Search for Event</p>
+        </section>
+
+        <section class="search-panel">
+            <form class="search-form" th:action="@{/events}" method="get">
+                <div class="search-field">
+                    <label for="keyword" th:text="#{search.title}">Search Events</label>
+                    <input id="keyword" class="search-input" type="search" name="keyword"
+                           th:value="${keyword}" th:placeholder="#{search.placeholder}" />
+                </div>
+
+                <div class="search-field">
+                    <label for="type" th:text="#{search.filter}">Filter</label>
+                    <select id="type" class="search-select" name="type">
+                        <option value="" th:text="#{event.type}">Event Type</option>
+                        <option value="eventtype.conference" th:selected="${selectedType == 'eventtype.conference'}" th:text="#{eventtype.conference}">Conference</option>
+                        <option value="eventtype.workshop" th:selected="${selectedType == 'eventtype.workshop'}" th:text="#{eventtype.workshop}">Workshop</option>
+                        <option value="eventtype.seminar" th:selected="${selectedType == 'eventtype.seminar'}" th:text="#{eventtype.seminar}">Seminar</option>
+                        <option value="eventtype.party" th:selected="${selectedType == 'eventtype.party'}" th:text="#{eventtype.party}">Party</option>
+                        <option value="eventtype.other" th:selected="${selectedType == 'eventtype.other'}" th:text="#{eventtype.other}">Other</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" th:text="#{search.button}">Search</button>
+            </form>
+        </section>
+
+        <section class="events-grid" th:if="${not #lists.isEmpty(eventCards)}">
+            <article class="event-card" th:each="card : ${eventCards}">
+                <div class="event-card-header">
+                    <div>
+                        <h2 class="event-title" th:text="${card.title}">Event Title</h2>
+                        <p class="event-description" th:text="${card.description}">Description</p>
+                    </div>
+                    <span class="event-type-badge" th:text="#{__${card.typeKey}__}">Conference</span>
+                </div>
+
+                <div class="event-meta">
+                    <div class="meta-item">
+                        <span class="meta-label" th:text="#{event.date}">Date</span>
+                        <span th:text="${card.date}">15 May 2026</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label" th:text="#{event.time}">Time</span>
+                        <span th:text="${card.time}">09:00</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label" th:text="#{event.location}">Location</span>
+                        <span th:text="${card.location}">Amphi A</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label" th:text="#{event.capacity}">Capacity</span>
+                        <span th:text="${card.capacity}">120</span>
+                    </div>
+                </div>
+
+                <form class="action-form" th:if="${card.joined}" th:action="@{/events/{id}/leave(id=${card.id})}" method="post">
+                    <button type="submit" class="btn btn-secondary" th:text="#{event.leave}">Leave Event</button>
+                </form>
+                <form class="action-form" th:unless="${card.joined}" th:action="@{/events/{id}/join(id=${card.id})}" method="post">
+                    <button type="submit" class="btn btn-primary" th:text="#{event.join}">Join Event</button>
+                </form>
+            </article>
+        </section>
+
+        <section class="empty-state" th:if="${#lists.isEmpty(eventCards)}">
+            <p th:text="#{search.noresults}">No events found</p>
+        </section>
+    </div>
+</div>
+
+<footer th:replace="~{welcome :: footer}"></footer>
+</body>
+</html>
