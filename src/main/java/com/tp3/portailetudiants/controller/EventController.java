@@ -38,15 +38,15 @@ public class EventController {
 
         List<Event> allEvents = eventRepository.findAll();
         if (keyword != null && !keyword.isBlank()) {
-            String normalizedKeyword = keyword.toLowerCase(currentLocale);
+            String lowercaseKeyword = keyword.toLowerCase(currentLocale);
             List<Event> filteredEvents = allEvents.stream()
                     .filter(currentEvent -> {
                         String title = messageSource.getMessage(currentEvent.getTitre(), null, currentEvent.getTitre(), currentLocale);
                         String description = messageSource.getMessage(currentEvent.getDescription(), null, currentEvent.getDescription(), currentLocale);
                         String location = messageSource.getMessage(currentEvent.getLieu(), null, currentEvent.getLieu(), currentLocale);
-                        return title.toLowerCase(currentLocale).contains(normalizedKeyword)
-                                || description.toLowerCase(currentLocale).contains(normalizedKeyword)
-                                || location.toLowerCase(currentLocale).contains(normalizedKeyword);
+                        return title.toLowerCase(currentLocale).contains(lowercaseKeyword)
+                                || description.toLowerCase(currentLocale).contains(lowercaseKeyword)
+                                || location.toLowerCase(currentLocale).contains(lowercaseKeyword);
                     })
                     .toList();
             model.addAttribute("events", filteredEvents);
