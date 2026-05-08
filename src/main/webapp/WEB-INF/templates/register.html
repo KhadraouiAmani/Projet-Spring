@@ -1,46 +1,241 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head>
     <meta charset="UTF-8">
-    <title th:text="#{nav.register}">Register</title>
-    <!-- On réutilise le style de Balkis ici -->
-    <style th:replace="~{welcome :: style}"></style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{register.title}">Register</title>
+    <style th:replace="~{welcome :: base-style}"></style>
     <style>
-        /* Ajout de styles pour les formulaires */
-        input { width: 100%; padding: 0.8rem; margin-top: 0.5rem; border: 1px solid #ddd; border-radius: 5px; }
-        .error { color: #e74c3c; font-size: 0.8rem; margin-top: 0.2rem; display: block; text-align: left; }
-        .form-group { margin-bottom: 1.5rem; text-align: left; }
+        .register-card {
+            max-width: 560px;
+            text-align: left;
+        }
+
+        .register-card h1,
+        .register-card > p {
+            text-align: center;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.45rem;
+            color: #4a4a4a;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 1px solid #d9def7;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+        }
+
+        .field-error {
+            display: block;
+            margin-top: 0.4rem;
+            color: #c01048;
+            font-size: 0.85rem;
+        }
+
+        .strength-meter {
+            margin-top: 0.6rem;
+            background: #edf0ff;
+            border-radius: 999px;
+            overflow: hidden;
+            height: 0.55rem;
+        }
+
+        .strength-meter-bar {
+            height: 100%;
+            width: 0;
+            background: #f04438;
+            transition: width 0.25s ease, background 0.25s ease;
+        }
+
+        .strength-text {
+            margin-top: 0.45rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .register-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            color: #666;
+        }
+
+        .text-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .text-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body th:dir="${#locale.language == 'ar' ? 'rtl' : 'ltr'}">
-<nav class="navbar" th:insert="~{welcome :: .navbar}"></nav>
+<nav th:replace="~{welcome :: navbar('/register')}"></nav>
 
 <div class="container">
-    <div class="content">
-        <h1 th:text="#{nav.register}">Register</h1>
+    <div class="content register-card">
+        <h1 th:text="#{register.title}">Create Account</h1>
+        <p th:text="#{welcome.description}">A complete platform to find, create and manage student events</p>
 
-        <form th:action="@{/register}" th:object="${user}" method="post">
-            <div class="form-group">
-                <label th:text="#{register.name}">Nom</label>
-                <input type="text" th:field="*{nom}" />
-                <span class="error" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+        <form th:action="@{/register}" th:object="${user}" method="post" id="registerForm" novalidate>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nom" th:text="#{register.name}">Full Name</label>
+                    <input id="nom" class="form-input" type="text" th:field="*{nom}" required />
+                    <span class="field-error" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+                    <span class="field-error client-error" data-for="nom"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" th:text="#{register.email}">Email Address</label>
+                    <input id="email" class="form-input" type="email" th:field="*{email}" required autocomplete="email" />
+                    <span class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    <span class="field-error client-error" data-for="email"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" th:text="#{register.password}">Password</label>
+                    <input id="password" class="form-input" type="password" th:field="*{password}" required autocomplete="new-password" />
+                    <div class="strength-meter"><div id="strengthBar" class="strength-meter-bar"></div></div>
+                    <p id="strengthText" class="strength-text" th:text="#{form.validation.password.weak}">Password must contain at least 8 characters</p>
+                    <span class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                    <span class="field-error client-error" data-for="password"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword" th:text="#{register.confirmpassword}">Confirm Password</label>
+                    <input id="confirmPassword" class="form-input" type="password" name="confirmPassword" required autocomplete="new-password" />
+                    <span class="field-error client-error" data-for="confirmPassword"></span>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label th:text="#{register.email}">Email</label>
-                <input type="email" th:field="*{email}" />
-                <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary" th:text="#{register.button}">Register</button>
+                <a class="btn btn-secondary" th:href="@{/login(lang=${#locale.language})}" th:text="#{nav.login}">Sign In</a>
             </div>
-
-            <div class="form-group">
-                <label th:text="#{register.password}">Password</label>
-                <input type="password" th:field="*{password}" />
-                <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary" th:text="#{nav.register}">Register</button>
         </form>
+
+        <p class="register-footer">
+            <span th:text="#{register.alreadyuser}">Already registered?</span>
+            <a class="text-link" th:href="@{/login(lang=${#locale.language})}" th:text="#{nav.login}">Sign In</a>
+        </p>
     </div>
 </div>
+
+<footer th:replace="~{welcome :: footer}"></footer>
+
+<script th:inline="javascript">
+    const messages = {
+        required: /*[[#{form.validation.required}]]*/ 'This field is required',
+        email: /*[[#{form.validation.email}]]*/ 'Please enter a valid email address',
+        weak: /*[[#{form.validation.password.weak}]]*/ 'Password must contain at least 8 characters',
+        mismatch: /*[[#{form.validation.password.mismatch}]]*/ 'Passwords do not match'
+    };
+
+    const registerForm = document.getElementById('registerForm');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const emailInput = document.getElementById('email');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+
+    function setClientError(fieldName, message) {
+        const container = document.querySelector(`.client-error[data-for="${fieldName}"]`);
+        if (container) {
+            container.textContent = message || '';
+        }
+    }
+
+    function updatePasswordStrength() {
+        const password = passwordInput.value;
+        let width = 0;
+        let color = '#f04438';
+
+        if (password.length >= 12) {
+            width = 100;
+            color = '#12b76a';
+        } else if (password.length >= 8) {
+            width = 70;
+            color = '#f79009';
+        } else if (password.length > 0) {
+            width = 40;
+        }
+
+        strengthBar.style.width = `${width}%`;
+        strengthBar.style.background = color;
+        strengthText.textContent = password.length >= 8 ? `${password.length}/8+` : messages.weak;
+    }
+
+    function validateClientFields() {
+        let valid = true;
+        setClientError('nom', '');
+        setClientError('email', '');
+        setClientError('password', '');
+        setClientError('confirmPassword', '');
+
+        const nameInput = document.getElementById('nom');
+        if (!nameInput.value.trim()) {
+            setClientError('nom', messages.required);
+            valid = false;
+        }
+
+        if (!emailInput.value.trim()) {
+            setClientError('email', messages.required);
+            valid = false;
+        } else if (!emailInput.checkValidity()) {
+            setClientError('email', messages.email);
+            valid = false;
+        }
+
+        if (!passwordInput.value) {
+            setClientError('password', messages.required);
+            valid = false;
+        } else if (passwordInput.value.length < 8) {
+            setClientError('password', messages.weak);
+            valid = false;
+        }
+
+        if (!confirmPasswordInput.value) {
+            setClientError('confirmPassword', messages.required);
+            valid = false;
+        } else if (confirmPasswordInput.value !== passwordInput.value) {
+            setClientError('confirmPassword', messages.mismatch);
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    passwordInput.addEventListener('input', updatePasswordStrength);
+    confirmPasswordInput.addEventListener('input', () => setClientError('confirmPassword', ''));
+    emailInput.addEventListener('input', () => setClientError('email', ''));
+
+    registerForm.addEventListener('submit', (event) => {
+        if (!validateClientFields()) {
+            event.preventDefault();
+        }
+    });
+
+    updatePasswordStrength();
+</script>
 </body>
 </html>
