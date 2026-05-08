@@ -11,5 +11,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     // Pour la fonctionnalité "Recherche d'événements" demandée dans l'énoncé
     // ContainingIgnoreCase permet de chercher une partie du titre sans se soucier des majuscules
     // SQL équivalent : SELECT * FROM events WHERE titre LIKE %?%
-    List<Event> findByTitreContainingIgnoreCase(String titre);
+    List<Event> findByTitreKeyContainingIgnoreCase(String titreKey);
 }

@@ -39,14 +39,14 @@
         <!-- LISTE DES EVENEMENTS (Ton travail d'Architecte) -->
         <div class="event-grid">
             <div class="event-card" th:each="event : ${events}">
-                <h3 th:text="${event.titre}">Titre de l'événement</h3>
+                <h3 th:text="#{${event.titre}}">Titre de l'événement</h3>
 
                 <div class="event-details">
-                    📍 <span th:text="${event.lieu}">Lieu</span> |
+                    📍 <span th:text="#{${event.lieu}}">Lieu</span> |
                     📅 <span th:text="${event.date}">Date</span>
                 </div>
 
-                <p th:text="${event.description}">Description détaillée de l'événement.</p>
+                <p th:text="#{${event.description}}">Description détaillée de l'événement.</p>
 
                 <!-- BOUTON PARTICIPER CORRIGÉ -->
                 <a th:href="@{/events/participate/{id}(id=${event.id})}"
