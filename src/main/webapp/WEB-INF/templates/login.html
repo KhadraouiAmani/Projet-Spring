@@ -10,24 +10,36 @@
     </style>
 </head>
 <body th:dir="${#locale.language == 'ar' ? 'rtl' : 'ltr'}">
-<nav class="navbar" th:insert="~{welcome :: .navbar}"></nav>
+<nav class="navbar">
+    <a th:href="@{/hello}" class="navbar-logo">📚 <span th:text="#{nav.brand}">Student Portal</span></a>
+    <ul class="navbar-menu">
+        <li><a th:href="@{/hello}" th:text="#{nav.home}">Home</a></li>
+        <li><a th:href="@{/events}" th:text="#{nav.events}">Events</a></li>
+        <li><a th:href="@{/register}" th:text="#{nav.register}">Register</a></li>
+    </ul>
+    <div class="language-switcher">
+        <a href="?lang=fr" title="Français">🇫🇷</a>
+        <a href="?lang=en" title="English">🇬🇧</a>
+        <a href="?lang=ar" title="العربية">🇸🇦</a>
+    </div>
+</nav>
 
 <div class="container">
     <div class="content">
-        <h1 th:text="#{nav.login}">Sign In</h1>
+        <h1 th:text="#{login.title}">Sign In</h1>
 
-        <div class="alert-error" th:if="${error}" th:text="${error}"></div>
+        <div class="alert-error" th:if="${error}" th:text="#{login.error}">Invalid email or password</div>
 
         <form th:action="@{/login}" method="post">
             <div style="text-align: left; margin-bottom: 1rem;">
-                <label th:text="#{register.email}">Email</label>
+                <label th:text="#{login.email}">Email</label>
                 <input type="email" name="email" required />
             </div>
             <div style="text-align: left; margin-bottom: 1.5rem;">
-                <label th:text="#{register.password}">Password</label>
+                <label th:text="#{login.password}">Password</label>
                 <input type="password" name="password" required />
             </div>
-            <button type="submit" class="btn btn-primary" th:text="#{nav.login}">Login</button>
+            <button type="submit" class="btn btn-primary" th:text="#{login.button}">Login</button>
         </form>
     </div>
 </div>

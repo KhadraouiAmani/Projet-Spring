@@ -14,12 +14,16 @@
 </head>
 <body th:dir="${#locale.language == 'ar' ? 'rtl' : 'ltr'}">
 <nav class="navbar">
-    <a href="#" class="navbar-logo">📚 Portal</a>
+    <a th:href="@{/hello}" class="navbar-logo">📚 <span th:text="#{nav.brand}">Student Portal</span></a>
     <div class="user-info">
         👤 <span th:text="${session.userSession.nom}">User</span>
-        | <a th:href="@{/logout}" style="color:red; text-decoration:none;">Logout</a>
+        | <a th:href="@{/logout}" style="color:red; text-decoration:none;" th:text="#{nav.logout}">Logout</a>
     </div>
-    <div class="language-switcher" th:insert="~{welcome :: .language-switcher}"></div>
+    <div class="language-switcher">
+        <a href="?lang=fr" title="Français">🇫🇷</a>
+        <a href="?lang=en" title="English">🇬🇧</a>
+        <a href="?lang=ar" title="العربية">🇸🇦</a>
+    </div>
 </nav>
 
 <div class="container" style="align-items: flex-start; padding-top: 5rem;">
