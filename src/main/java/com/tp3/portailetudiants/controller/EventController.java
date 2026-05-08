@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.tp3.portailetudiants.model.Event; // Pour que le contrôleur connaisse ta classe Event
 import org.springframework.web.bind.annotation.PathVariable; // Pour utiliser @PathVariable
 
+import java.util.List;
 import java.util.Locale;
 
 @Controller
@@ -29,11 +30,30 @@ public class EventController {
             return "redirect:/login";
         }
 
-        if (keyword != null && !keyword.isEmpty()) {
-            model.addAttribute("events", eventRepository.findByTitreKeyContainingIgnoreCase(keyword));
-        } else {
-            model.addAttribute("events", eventRepository.findAll());
+        Locale locale = (Locale) session.getAttribute("org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE");
+        if (locale == null) {
+            locale = Locale.FRENCH;
         }
+        final Locale currentLocale = locale;
+
+        List<Event> allEvents = eventRepository.findAll();
+        if (keyword != null && !keyword.isBlank()) {
+            String normalizedKeyword = keyword.toLowerCase(currentLocale);
+            List<Event> filteredEvents = allEvents.stream()
+                    .filter(currentEvent -> {
+                        String title = messageSource.getMessage(currentEvent.getTitre(), null, currentEvent.getTitre(), currentLocale);
+                        String description = messageSource.getMessage(currentEvent.getDescription(), null, currentEvent.getDescription(), currentLocale);
+                        String location = messageSource.getMessage(currentEvent.getLieu(), null, currentEvent.getLieu(), currentLocale);
+                        return title.toLowerCase(currentLocale).contains(normalizedKeyword)
+                                || description.toLowerCase(currentLocale).contains(normalizedKeyword)
+                                || location.toLowerCase(currentLocale).contains(normalizedKeyword);
+                    })
+                    .toList();
+            model.addAttribute("events", filteredEvents);
+        } else {
+            model.addAttribute("events", allEvents);
+        }
+
         return "events"; // Thymeleaf avec support multilingue
     }
     @GetMapping("/events/participate/{id}")
