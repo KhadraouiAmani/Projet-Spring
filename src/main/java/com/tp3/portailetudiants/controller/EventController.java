@@ -43,7 +43,13 @@ public class EventController {
 
         if (event != null) {
             String localizedTitle = messageSource.getMessage(event.getTitre(), null, event.getTitre(), locale);
-            model.addAttribute("message", "Votre participation à l'événement '" + localizedTitle + "' a été prise en compte !");
+            String successMessage = messageSource.getMessage(
+                    "event.participation.success",
+                    new Object[]{localizedTitle},
+                    "Votre participation à l'événement '" + localizedTitle + "' a été prise en compte !",
+                    locale
+            );
+            model.addAttribute("message", successMessage);
         }
 
         return "participation-confirm"; // On va créer cette petite page

@@ -51,7 +51,12 @@ public class DataInitializer {
 
         List<Event> events = eventRepository.findAll();
         for (Event currentEvent : events) {
-            String[] keys = legacyToKeys.get(currentEvent.getTitre());
+            String currentTitle = currentEvent.getTitre();
+            if (currentTitle != null && currentTitle.startsWith("event.")) {
+                continue;
+            }
+
+            String[] keys = legacyToKeys.get(currentTitle);
             if (keys != null) {
                 currentEvent.setTitreKey(keys[0]);
                 currentEvent.setDescriptionKey(keys[1]);
